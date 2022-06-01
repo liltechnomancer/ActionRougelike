@@ -44,7 +44,7 @@ void UARInteractionComponent::PrimaryInteract()
 
 
 
-	UE_LOG(LogTemp, Warning, TEXT("I just started running"));
+	UE_LOG(LogTemp, Warning, TEXT("INTERACTION COMP: Interaction request recieved, please hold."));
 	FVector EyeLocation;
 	FRotator EyeRotation;
 	MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
@@ -69,22 +69,23 @@ void UARInteractionComponent::PrimaryInteract()
 		AActor* HitActor = Hit.GetActor();
 		if (HitActor)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("We need to go deeper"));
+			UE_LOG(LogTemp, Warning, TEXT("INTERACTION COMP: I hit a thing, maybe i can interact?"));
 			if (HitActor->Implements<UARInteractInterface>())
 			{
-				UE_LOG(LogTemp, Warning, TEXT("too deep!"));
+				UE_LOG(LogTemp, Warning, TEXT("INTERACTION COMP: I can interact."));
+				DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, FColor::Yellow, false, 2.0f);
 				APawn* MyPawn = Cast<APawn>(MyOwner);
 				IARInteractInterface::Execute_Interact(HitActor, MyPawn);
 				break;
 			}
 		}
 
-		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f);
+		 DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f);
 	}
 
 
 
-	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+	 DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
 
 }
 

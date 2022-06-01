@@ -64,14 +64,37 @@ void AARCharacter::PrimaryAttack_TimeElapsed()
 {
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+
+	// GetCamera
+	// APlayerCameraManager *camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	
+	FVector CameraLocation = CameraComp->GetComponentLocation();
+	FRotator CameraRotation = CameraComp->GetComponentRotation();
+
+	FVector End = CameraLocation + (CameraRotation.Vector() * 10000);
+	FHitResult Hit;
+
+	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, CameraLocation, End, ObjectQueryParams);
+
+	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+	
+	// DrawDebugLine(GetWorld(), CameraLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+	FRotator ToHitRotation = (Hit.ImpactPoint - HandLocation).Rotation();
+	// DrawDebugLine(GetWorld(), HandLocation, Hit.ImpactPoint, LineColor, false, 2.0f, 0, 2.0f);
+
+	// Ternary to decide angle. 
+	FTransform SpawnTM = FTransform(bBlockingHit ? ToHitRotation : GetControlRotation(), HandLocation);
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	SpawnParams.Instigator = this;
-	
+
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+
 }
 
 void AARCharacter::PrimaryAttack()
