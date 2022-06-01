@@ -10,20 +10,20 @@
 AARMagicProjectile::AARMagicProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
-	SphereComp->SetCollisionProfileName("Projectile");
-
-	RootComponent = SphereComp;
-
-	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
-	EffectComp->SetupAttachment(SphereComp);
-
-	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
-	MovementComp->InitialSpeed = 1000.0f;
-	MovementComp->bRotationFollowsVelocity = true;
-	MovementComp->bInitialVelocityInLocalSpace = true;
+	// PrimaryActorTick.bCanEverTick = true;
+	//
+	// SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
+	// SphereComp->SetCollisionProfileName("Projectile");
+	//
+	// RootComponent = SphereComp;
+	//
+	// EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
+	// EffectComp->SetupAttachment(SphereComp);
+	//
+	// MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
+	// MovementComp->InitialSpeed = 1000.0f;
+	// MovementComp->bRotationFollowsVelocity = true;
+	// MovementComp->bInitialVelocityInLocalSpace = true;
 
 }
 
@@ -34,16 +34,16 @@ void AARMagicProjectile::BeginPlay()
 	
 }
 
-void AARMagicProjectile::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-
-	if (APawn* ProjectileInstigator = GetInstigator())
-	{
-		SphereComp->IgnoreActorWhenMoving(ProjectileInstigator, true);
-		ProjectileInstigator->MoveIgnoreActorAdd(this);
-	}
-}
+// void AARMagicProjectile::PostInitializeComponents()
+// {
+// 	Super::PostInitializeComponents();
+//
+// 	if (APawn* ProjectileInstigator = GetInstigator())
+// 	{
+// 		SphereComp->IgnoreActorWhenMoving(ProjectileInstigator, true);
+// 		ProjectileInstigator->MoveIgnoreActorAdd(this);
+// 	}
+// }
 
 // Called every frame
 void AARMagicProjectile::Tick(float DeltaTime)

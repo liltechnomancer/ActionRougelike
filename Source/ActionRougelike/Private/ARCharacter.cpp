@@ -62,6 +62,44 @@ void AARCharacter::MoveRight(float Value)
 
 void AARCharacter::PrimaryAttack_TimeElapsed()
 {
+	// FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	//
+	//
+	// // GetCamera
+	// // APlayerCameraManager *camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager
+	// FCollisionObjectQueryParams ObjectQueryParams;
+	// ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	// ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	//
+	// FVector CameraLocation = CameraComp->GetComponentLocation();
+	// FRotator CameraRotation = CameraComp->GetComponentRotation();
+	//
+	// FVector End = CameraLocation + (CameraRotation.Vector() * 10000);
+	// FHitResult Hit;
+	//
+	// bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, CameraLocation, End, ObjectQueryParams);
+	//
+	// FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+	//
+	// // DrawDebugLine(GetWorld(), CameraLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+	// FRotator ToHitRotation = (Hit.ImpactPoint - HandLocation).Rotation();
+	// // DrawDebugLine(GetWorld(), HandLocation, Hit.ImpactPoint, LineColor, false, 2.0f, 0, 2.0f);
+	//
+	// // Ternary to decide angle. 
+	// FTransform SpawnTM = FTransform(bBlockingHit ? ToHitRotation : GetControlRotation(), HandLocation);
+	//
+	// FActorSpawnParameters SpawnParams;
+	// SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	//
+	// SpawnParams.Instigator = this;
+	//
+	// GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	UE_LOG(LogTemp, Warning, TEXT("I have gotten to the secret spot"));
+	FireProjectile(ProjectileClass);
+}
+
+void AARCharacter::FireProjectile(TSubclassOf<AActor> Projectile)
+{
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
 
@@ -93,18 +131,20 @@ void AARCharacter::PrimaryAttack_TimeElapsed()
 
 	SpawnParams.Instigator = this;
 
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
-
+	GetWorld()->SpawnActor<AActor>(Projectile, SpawnTM, SpawnParams);
 }
 
 void AARCharacter::PrimaryAttack()
 {
+	UE_LOG(LogTemp, Log, TEXT("Primary Attack Called"));
+	// PlayAnimMontage(AttackAnim); 
+	// GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AARCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+}
 
+void AARCharacter::SecondaryAttack()
+{
 	PlayAnimMontage(AttackAnim); 
-
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AARCharacter::PrimaryAttack_TimeElapsed, 0.2f);
-
-
 }
 
 void AARCharacter::PrimaryInteract()
@@ -154,6 +194,7 @@ void AARCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &::AARCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("SecondaryAttack", IE_Pressed, this, &::AARCharacter::SecondaryAttack);
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &::AARCharacter::PrimaryInteract);
 }
 
