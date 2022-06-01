@@ -34,10 +34,20 @@ void AARMagicProjectile::BeginPlay()
 	
 }
 
+void AARMagicProjectile::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (APawn* ProjectileInstigator = GetInstigator())
+	{
+		SphereComp->IgnoreActorWhenMoving(ProjectileInstigator, true);
+		ProjectileInstigator->MoveIgnoreActorAdd(this);
+	}
+}
+
 // Called every frame
 void AARMagicProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
