@@ -60,43 +60,6 @@ void AARCharacter::MoveRight(float Value)
 	AddMovementInput(RightVector, Value);
 }
 
-void AARCharacter::PrimaryAttack_TimeElapsed()
-{
-	// FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	//
-	//
-	// // GetCamera
-	// // APlayerCameraManager *camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager
-	// FCollisionObjectQueryParams ObjectQueryParams;
-	// ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
-	// ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
-	//
-	// FVector CameraLocation = CameraComp->GetComponentLocation();
-	// FRotator CameraRotation = CameraComp->GetComponentRotation();
-	//
-	// FVector End = CameraLocation + (CameraRotation.Vector() * 10000);
-	// FHitResult Hit;
-	//
-	// bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, CameraLocation, End, ObjectQueryParams);
-	//
-	// FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
-	//
-	// // DrawDebugLine(GetWorld(), CameraLocation, End, LineColor, false, 2.0f, 0, 2.0f);
-	// FRotator ToHitRotation = (Hit.ImpactPoint - HandLocation).Rotation();
-	// // DrawDebugLine(GetWorld(), HandLocation, Hit.ImpactPoint, LineColor, false, 2.0f, 0, 2.0f);
-	//
-	// // Ternary to decide angle. 
-	// FTransform SpawnTM = FTransform(bBlockingHit ? ToHitRotation : GetControlRotation(), HandLocation);
-	//
-	// FActorSpawnParameters SpawnParams;
-	// SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	//
-	// SpawnParams.Instigator = this;
-	//
-	// GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
-	UE_LOG(LogTemp, Warning, TEXT("I have gotten to the secret spot"));
-	FireProjectile(ProjectileClass);
-}
 
 void AARCharacter::FireProjectile(TSubclassOf<AActor> Projectile)
 {
@@ -108,6 +71,7 @@ void AARCharacter::FireProjectile(TSubclassOf<AActor> Projectile)
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
 	
 	FVector CameraLocation = CameraComp->GetComponentLocation();
 	FRotator CameraRotation = CameraComp->GetComponentRotation();
@@ -119,9 +83,9 @@ void AARCharacter::FireProjectile(TSubclassOf<AActor> Projectile)
 
 	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
 	
-	// DrawDebugLine(GetWorld(), CameraLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+	DrawDebugLine(GetWorld(), CameraLocation, End, LineColor, false, 2.0f, 0, 2.0f);
 	FRotator ToHitRotation = (Hit.ImpactPoint - HandLocation).Rotation();
-	// DrawDebugLine(GetWorld(), HandLocation, Hit.ImpactPoint, LineColor, false, 2.0f, 0, 2.0f);
+	DrawDebugLine(GetWorld(), HandLocation, Hit.ImpactPoint, LineColor, false, 2.0f, 0, 2.0f);
 
 	// Ternary to decide angle. 
 	FTransform SpawnTM = FTransform(bBlockingHit ? ToHitRotation : GetControlRotation(), HandLocation);
@@ -137,14 +101,26 @@ void AARCharacter::FireProjectile(TSubclassOf<AActor> Projectile)
 void AARCharacter::PrimaryAttack()
 {
 	UE_LOG(LogTemp, Log, TEXT("Primary Attack Called"));
-	// PlayAnimMontage(AttackAnim); 
-	// GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AARCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+	PlayAnimMontage(AttackAnim); 
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AARCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+}
+
+void AARCharacter::PrimaryAttack_TimeElapsed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("I have gotten to the secret spot"));
+	FireProjectile(ProjectileClass);
 }
 
 void AARCharacter::SecondaryAttack()
 {
 	PlayAnimMontage(AttackAnim); 
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AARCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AARCharacter::SecondaryAttack_TimeElapsed, 0.2f);
+}
+
+void AARCharacter::SecondaryAttack_TimeElapsed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("I have gotten to the secret black hole spot"));
+	FireProjectile(BlackHoleClass);
 }
 
 void AARCharacter::PrimaryInteract()

@@ -51,6 +51,7 @@ protected:
 	void FireProjectile(TSubclassOf<AActor> Projectile);
 	void PrimaryAttack_TimeElapsed();
 	void PrimaryAttack();
+	void SecondaryAttack_TimeElapsed();
 	void SecondaryAttack();
 	void PrimaryInteract();
 
