@@ -10,7 +10,7 @@
 class USphereComponent;
 class UProjectileMovementComponent;
 class UParticleSystemComponent;
-// hello
+
 UCLASS()
 class ACTIONROUGELIKE_API AARMagicProjectile : public AAARProjectileBase
 {

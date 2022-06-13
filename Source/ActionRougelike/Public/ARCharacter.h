@@ -27,6 +27,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor>BlackHoleClass;
 
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor>DashClass;
+	
 	FTimerHandle TimerHandle_PrimaryAttack;
 
 public:
@@ -53,6 +56,8 @@ protected:
 	void PrimaryAttack();
 	void SecondaryAttack_TimeElapsed();
 	void SecondaryAttack();
+	void DashAttack_TimeElapsed();
+	void DashAttack();
 	void PrimaryInteract();
 
 

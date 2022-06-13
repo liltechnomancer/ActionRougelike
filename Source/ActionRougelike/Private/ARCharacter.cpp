@@ -123,6 +123,18 @@ void AARCharacter::SecondaryAttack_TimeElapsed()
 	FireProjectile(BlackHoleClass);
 }
 
+void AARCharacter::DashAttack()
+{
+	PlayAnimMontage(AttackAnim); 
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &AARCharacter::DashAttack_TimeElapsed, 0.2f);
+}
+
+void AARCharacter::DashAttack_TimeElapsed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("I have gotten to the secret dash spot"));
+	FireProjectile(DashClass);
+}
+
 void AARCharacter::PrimaryInteract()
 {
 	if (InteractionComp) 
@@ -171,6 +183,7 @@ void AARCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &::AARCharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("SecondaryAttack", IE_Pressed, this, &::AARCharacter::SecondaryAttack);
+	PlayerInputComponent->BindAction("DashAttack", IE_Pressed, this, &::AARCharacter::DashAttack);
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &::AARCharacter::PrimaryInteract);
 }
 
